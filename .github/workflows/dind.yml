@@ -1,0 +1,16 @@
+name: dind
+on: [workflow_dispatch, push]
+jobs:
+  dind:
+    runs-on: multicloud-4cpu
+    steps:
+      - name: node facts
+        run: |
+          echo "hostname=$(hostname)"
+          cat /etc/hostname || true
+          nproc; free -m | head -2
+      - name: docker build
+        run: |
+          printf 'FROM alpine:3.20\nRUN echo built-ok\n' > Dockerfile.spike
+          docker build -q -t spike-t -f Dockerfile.spike .
+          docker run --rm spike-t echo run-ok

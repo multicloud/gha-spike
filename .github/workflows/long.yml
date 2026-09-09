@@ -1,0 +1,11 @@
+name: long
+on: [workflow_dispatch]
+jobs:
+  long:
+    runs-on: multicloud-4cpu
+    steps:
+      - name: sleep 10 minutes
+        run: |
+          echo "start=$(date -u +%FT%TZ) host=$(hostname)"
+          sleep 600
+          echo "done=$(date -u +%FT%TZ)"
