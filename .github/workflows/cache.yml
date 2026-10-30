@@ -1,0 +1,17 @@
+name: cache
+on: workflow_dispatch
+jobs:
+  cache:
+    runs-on: multicloud-medium
+    steps:
+      - name: restore or save a 50 MB test cache
+        uses: runs-on/cache@88d90644011a3a9957fd141a106f5a94f9794203 # v5.0.7
+        id: c
+        with:
+          path: cache-test
+          key: mc-cache-test-v1
+      - name: create the test data on a miss
+        if: steps.c.outputs.cache-hit != 'true'
+        run: mkdir -p cache-test && head -c 50M /dev/urandom > cache-test/blob && sha256sum cache-test/blob
+      - name: show the result
+        run: echo "cache-hit=${{ steps.c.outputs.cache-hit }}"; sha256sum cache-test/blob
